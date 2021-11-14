@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
+public class crossword {
 
   public static void solution(char[][] arr, String[] words, int vidx) {
       if(vidx == words.length)
