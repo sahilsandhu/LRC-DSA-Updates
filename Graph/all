@@ -1,0 +1,40 @@
+// has Path ==============  DFS
+
+bool hasPath(vector<Edge>graph[],int src,int dest,vector<int>&vis)
+{
+    if(src == dest)
+    return true;
+    vis[src] = 1;
+    bool ans = false;
+    for(Edge ed : graph[src])
+    {
+        if(vis[ed.nbr] == 0)
+        {
+          bool temp = hasPath(graph,ed.nbr,dest,vis);
+          if(temp)
+          ans = temp;
+        }
+    }
+    return ans;
+}
+
+// Print Path
+
+void printPath(vector<Edge> graph[],int src,int dest,vector<int> &vis,string psf)
+{
+    if(src == dest)
+    {
+        cout<<psf<<endl;
+        return;
+    }
+    vis[src] = 1;
+    for(Edge ed : graph[src])
+    {
+        if(vis[ed.nbr] == 0)
+        {
+            printPath(graph,ed.nbr,dest,vis,psf+to_string(ed.nbr));
+        }
+    }
+    vis[src] = false;
+    
+}
