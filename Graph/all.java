@@ -1867,4 +1867,172 @@ public:
 };
 
 
-//
+// Regions Cut by Slashes ============================================
+/* 
+Here we assume a 2 d matrix and we work only on the cells of those matrixs.
+*/
+class Solution {
+        int findParent(int u)
+    {
+        if(parent[u] == u)
+            return u;
+        return parent[u] = findParent(parent[u]);
+    }
+    
+    void merge(int u,int v)
+    {
+        int p1 = findParent(u);
+        int p2 = findParent(v);
+        if(p1!=p2)
+        {
+            if(rnk[p1] > rnk[p2])
+            {
+                parent[p2] = p1;
+                rnk[p1]+= rnk[p2];
+            }
+            else{
+                parent[p1] = p2;
+                rnk[p2]+= rnk[p1];
+            }
+        }
+        else
+        {
+            count++;
+        }
+    }
+    int[] parent;
+    int[] rnk;
+    int count;
+
+    public int regionsBySlashes(String[] grid) {
+        int size = grid.length+1;
+        //int n = size;
+        parent = new int[size*size];
+        rnk =   new int[size*size];
+        count = 1;
+        
+        for(int i=0;i<parent.length;i++)
+        {
+            parent[i] = i; 
+            rnk[i] = 1;
+        }
+        
+        for(int i=0;i<size;i++)
+        {
+            for(int j=0;j<size;j++)
+            {
+                if(i==0 || j==0 || i == size-1 || j==size-1)
+                {
+                    int cell = i*size+j;
+                    if(cell != 0)
+                        merge(0,cell);
+                }
+            }
+        }
+        
+        for(int i=0;i<grid.length;i++)
+        {
+            char[] ch = grid[i].toCharArray();
+            for(int j=0;j<ch.length;j++)
+            {
+                if(ch[j] == '/')
+                {
+                   int p1 = (i+1)*size+j;
+                   int p2 = i*size+(j+1);
+                    merge(p1,p2);
+                }
+                else if(ch[j] == '\\')
+                {
+                    int p1 = i*size+j;
+                    int p2 = (i+1)*size+(j+1);
+                    merge(p1,p2);
+                }
+            }
+        }
+        return count;
+        
+    }
+}
+
+
+// Redundant Connection 2 
+
+
+//Note : Whenever a tree get converted into the graph with an extra edge 3 cases will occur:
+// 1. A Cycle will form
+// 2. An Edge will have 2 parent
+// 3. A cycle will form and also one edge will have 2 parent.
+// Note : we can't use the DSU to find the cycle in a directed graph, but if we are sure that cycle is present in the graph, and there is only one cycle which
+// is present. so we can use the DSU to find the last edge due to which the cycle is present.
+// 
+
+class Solution {
+public:
+    vector<int> parent;
+    vector<int> size;
+    
+    int findParent(int u)
+    {
+        if(parent[u] == u)
+            return u;
+        return parent[u] = findParent(parent[u]);
+    }
+    void merge(int u, int v)
+    {
+        if(size[u] > size[v])
+        {
+            parent[v] = u;
+            size[u]+=size[v];
+        }
+        else
+        {
+            parent[u] = v;
+            size[v]+=size[u];
+        }
+    }
+    vector<int> findRedundantDirectedConnection(vector<vector<int>>& edges) {
+    
+        int n = edges.size();
+        vector<int> indegree(n+1,-1);
+        int blacklist1 = -1;
+        int blacklist2 = -1;
+        for(int i=0;i<n;i++)
+        {
+            int u = edges[i][0];
+            int v = edges[i][1];
+            if(indegree[v] == -1)
+               indegree[v] = i;
+            else
+            {    blacklist1 = i;
+                 blacklist2 = indegree[v];
+             break;
+            }
+                
+        }
+        parent.resize(n+1,0);
+        size.resize(n+1,1);
+        for(int i=1;i<=n;i++)
+            parent[i] = i;
+        
+        for(int i=0;i<n;i++)
+        {
+            if(i == blacklist1)
+                continue;
+            int u = edges[i][0];
+            int v = edges[i][1];
+            int p1 = findParent(u);
+            int p2 = findParent(v);
+            if(p1!=p2)
+                merge(p1,p2);
+            else
+            {
+              if(blacklist1 == -1)   // case 2 ------ cycle, no 2 parent
+                  return edges[i]; 
+              else    
+              return edges[blacklist2]; // case 3 ----- cycle and 2 parent
+            }
+        }
+        return edges[blacklist1]; // case 1 ------ 2 parent
+    }
+};
+
