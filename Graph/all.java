@@ -1697,4 +1697,174 @@ public:
 
 
 
+// Course Schedule 
+
+class Solution {
+public:
+    bool canFinish(int n, vector<vector<int>>& courses) {
+         vector<int> graph[n];
+        for(int i=0;i<courses.size();i++)
+        {
+            graph[courses[i][0]].push_back(courses[i][1]);
+            
+        }
+        vector<int>indegree(n,0);
+        for(int i=0;i<n;i++)
+        {
+            for(int val : graph[i])
+            {
+                indegree[val]++;
+            }
+        }
+        queue<int>q;
+        for(int i=0;i<n;i++)
+        {
+            if(indegree[i] == 0)
+                q.push(i);
+        }
+        int cnt = 0;
+        while(q.size() > 0)
+        {
+            int t = q.front();
+            q.pop();
+            for(int u : graph[t])
+            {
+                indegree[u]--;
+                if(indegree[u] == 0)
+                    q.push(u);
+            }
+            cnt++;
+        }
+        if(cnt!=n)
+            return false;
+        else
+            return true;
+       
+    }
+};
+
+// minimum hamming distance ====================================
+
+class Solution {
+    int[] parent;
+    
+    int findParent(int u)
+    {
+        if(parent[u] == u)
+            return u;
+        return parent[u] = findParent(parent[u]);
+    }
+    
+    public int minimumHammingDistance(int[] source, int[] target, int[][] allowedSwaps) {
+        int n = source.length;
+        parent = new int[n];
+        for(int i=0;i<n;i++)
+        {
+            parent[i] = i;
+        }
+        for(var val : allowedSwaps)
+        {
+            int u = val[0];
+            int v = val[1];
+            int p1 = findParent(u);
+            int p2 = findParent(v);
+            if(p1!=p2)
+                parent[p1] = p2;
+        }
+        
+        HashMap<Integer, HashMap<Integer,Integer>> hm = new HashMap<>();
+        for(int i=0;i<n;i++)
+        {
+            int root = findParent(i);
+            int num = source[i];
+            if(!hm.containsKey(root))
+            {
+                hm.put(root, new HashMap<>());
+            }
+            HashMap<Integer,Integer> mp = hm.get(root);
+            if(mp.containsKey(num))
+            {
+                mp.put(num,mp.get(num)+1);
+            }
+            else
+            {
+                mp.put(num,1);
+            }
+        }
+        int hd = 0;
+        for(int i=0;i<n;i++)
+        {
+            int root = findParent(i);
+            int num = target[i];
+            HashMap<Integer,Integer>mp = hm.get(root);
+            if(!mp.containsKey(num))
+            {
+                hd++;
+                continue;
+            }
+            if(mp.get(num) <= 0)
+                hd++;
+            mp.put(num,mp.get(num)-1);
+        }
+        return hd;
+    }
+}
+
+//  Parallel Course 2 ======== Topological Sort =========
+
+class Solution {
+public:
+    int minimumTime(int n, vector<vector<int>>& relations, vector<int>& time) {
+        vector<vector<int>> graph(n+1);
+        vector<int> maxtime(n+1,0);
+        for(auto val : relations)
+        {
+            graph[val[0]].push_back(val[1]);
+        }
+        vector<int> indegree(n+1,0);
+        
+        for(int i=0;i<=n;i++)
+        {
+            for(int v : graph[i])
+            {
+                indegree[v]++;
+            }
+        }
+        queue<int>q;
+        for(int i=1;i<=n;i++)
+        {
+            if(indegree[i] == 0)
+                q.push(i);
+        }
+        
+        int ans = 0;
+        while(q.size() > 0)
+        {
+            int s = q.size();
+            int m = 0;
+            while(s-- > 0)
+            {
+                int t = q.front();
+                q.pop();
+                for(auto nbr : graph[t])
+                {
+                    indegree[nbr]--;
+                    maxtime[nbr] = max(time[t-1],maxtime[nbr]);
+                    if(indegree[nbr] == 0){
+                     time[nbr-1] += maxtime[nbr];
+                        q.push(nbr);
+                    }
+                }
+            }
+              
+        } 
+        ans = INT_MIN;
+          for(int val : time)
+              ans = max(ans, val);
+          
+        return ans;
+    }
+};
+
+
 //
