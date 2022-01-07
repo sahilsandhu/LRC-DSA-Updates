@@ -56,6 +56,41 @@ public class basic{
     {
 
     }
+
+    //Print Maze Paths
+     public static void printMazePaths(int sr, int sc, int dr, int dc, String psf) {
+	        if(sr>dr || sc>dc)
+	        return;
+	        if(sr==dr && sc==dc)
+	        {
+	            System.out.println(psf);
+	            return;
+	        }
+	        printMazePaths(sr,sc+1,dr,dc,psf+"h");
+	        printMazePaths(sr+1,sc,dr,dc,psf+"v");
+	    }
+    // Print maze path with jump
+
+     public static void printMazePaths(int sr, int sc, int dr, int dc, String psf) {
+        if(sr > dr && sc > dc)
+        return;
+        if(sr == dr && sc == dc)
+        {
+            System.out.println(psf);
+            return;
+        }
+        for(int jmp = 1; jmp+sc<=dc ; jmp++){
+            printMazePaths(sr,sc+jmp,dr,dc,psf+"h"+jmp);
+        }
+        for(int jmp = 1; jmp+sr<=dr ; jmp++){
+            printMazePaths(sr+jmp,sc,dr,dc,psf+"v"+jmp);
+        }
+        for(int jmp = 1; jmp+sr<=dr && jmp+sc<=dc; jmp++){
+            printMazePaths(sr+jmp,sc+jmp,dr,dc,psf+"d"+jmp);
+        }
+    }
+
+
     public static void main(String[] args)
     {
      

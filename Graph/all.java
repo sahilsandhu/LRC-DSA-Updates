@@ -2036,3 +2036,198 @@ public:
     }
 };
 
+// the maze ================================
+
+public class Solution {
+    /**
+     * @param maze: the maze
+     * @param start: the start
+     * @param destination: the destination
+     * @return: whether the ball could stop at the destination
+     */
+    public class pair{
+        int i;
+        int j;
+        pair(int i,int j)
+        {
+            this.i = i;
+            this.j = j;
+        }
+    }
+
+    public boolean hasPath(int[][] maze, int[] start, int[] dest) {
+        // write your code here
+        Queue<pair> q = new ArrayDeque<>();
+        q.add(new pair(start[0],start[1]));
+        int n = maze.length;
+        int m = maze[0].length;
+        int[][] vis = new int[n][m];
+        int [][] dirs = {{1,0},{0,1},{-1,0},{0,-1}};
+        vis[start[0]][start[1]] = 1;
+        while(q.size()>0){
+            pair rp = q.remove();
+            for(int[] val : dirs)
+            {
+                int x = rp.i;
+                int y = rp.j;
+                vis[x][y] = 1;
+
+                while(x>=0 && y>=0 && x<n && y<m && maze[x][y] == 0)
+                {
+                    x+=val[0];
+                    y+=val[1];
+                }
+                x-=val[0];
+                y-=val[1];
+                if(x == dest[0] && y == dest[1])
+                return true;
+                if(vis[x][y] == 1)
+                continue;
+                //vis[x][y] = 1;
+                
+                q.add(new pair(x,y));
+            }
+        }
+        return false;
+        
+
+    }
+}
+
+// maze 2 ===========================================
+
+public class Solution {
+    /**
+     * @param maze: the maze
+     * @param start: the start
+     * @param destination: the destination
+     * @return: the shortest distance for the ball to stop at the destination
+     */
+     
+public class pair implements Comparable<pair>{
+        int i;
+        int j;
+        int cost;
+        pair(int i,int j,int cost)
+        {
+            this.i = i;
+            this.j = j;
+            this.cost = cost;
+        }
+        public int compareTo(pair p) {
+            return this.cost - p.cost;
+        }
+}
+
+public int shortestDistance(int[][] maze, int[] start, int[] dest) {
+        // write your code here
+        // write your code here
+        PriorityQueue<pair> pq = new PriorityQueue<>();
+        pq.add(new pair(start[0],start[1],0));
+        int n = maze.length;
+        int m = maze[0].length;
+        int[][] vis = new int[n][m];
+        int [][] dirs = {{1,0},{0,1},{-1,0},{0,-1}};
+        vis[start[0]][start[1]] = 1;
+        while(pq.size()>0){
+            pair rp = pq.remove();
+            if(rp.i == dest[0] && rp.j == dest[1])
+            return rp.cost;
+            vis[rp.i][rp.j] = 1;
+            for(int[] val : dirs)
+            {
+                int x = rp.i;
+                int y = rp.j;
+                int dis = 0;
+                while(x>=0 && y>=0 && x<n && y<m && maze[x][y] == 0)
+                {
+                    x+=val[0];
+                    y+=val[1];
+                    dis++;
+                }
+                x-=val[0];
+                y-=val[1];
+                dis--;
+                
+                if(vis[x][y] == 1)
+                 continue;
+                
+                pq.add(new pair(x,y,rp.cost+dis));
+            }
+        }
+        return -1;
+
+    }
+}
+
+// maze 3 =====================================
+
+public class Solution {
+    /**
+     * @param maze: the maze
+     * @param ball: the ball position
+     * @param hole: the hole position
+     * @return: the lexicographically smallest way
+     */
+
+    public class pair implements Comparable<pair>{
+        int i;
+        int j;
+        String ans;
+        int count;
+        pair(int i,int j,String ans, int count)
+        {
+            this.i = i;
+            this.j = j;
+            this.ans = ans;
+            this.count = count;
+        }
+        public int compareTo(pair o)
+        {
+            if(this.count == o.count)
+            return this.ans.compareTo(o.ans);
+            else
+            return this.count - o.count;
+        }
+    } 
+    public String findShortestWay(int[][] maze, int[] ball, int[] hole) {
+        // write your code here
+        PriorityQueue<pair> pq = new PriorityQueue<>();
+        pq.add(new pair(ball[0],ball[1],"",0));
+        int m = maze.length;
+        int n = maze[0].length;
+        int vis[][] = new int[m][n];
+        char[] dstr = {'d', 'l', 'r', 'u'};
+        int[][] dirs = {{1,0},{0,-1},{0,1},{-1,0}};
+        while(pq.size() > 0)
+        {
+           pair rp = pq.remove();
+           if(rp.i == hole[0] && rp.j == hole[1])
+           return rp.ans;
+            
+            vis[rp.i][rp.j] = 1;
+
+           for(int k=0;k<4;k++)
+           {
+               int x = rp.i;
+               int y = rp.j;
+               int count = 0;
+               String dir = rp.ans;
+               while(x+dirs[k][0]>=0 && y+dirs[k][1]>=0 && x+dirs[k][0]<m && y+dirs[k][1]<n && maze[x+dirs[k][0]][y+dirs[k][1]]==0)
+               {
+               
+                x+=dirs[k][0];
+                y+=dirs[k][1];
+                count++;
+                if(x == hole[0] && y == hole[1])
+                   break;
+               }
+               if(vis[x][y] == 0)
+               {
+                   pq.add(new pair(x,y,dir+dstr[k],count+rp.count));
+               }
+           }
+        }
+        return "impossible";
+    }
+}
