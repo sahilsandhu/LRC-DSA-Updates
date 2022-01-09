@@ -53,3 +53,44 @@ int main()
     }
     return 0;
 }
+
+// 3rd qs
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    int n;
+    int n,k;
+    while(n--)
+    {
+       cin>>n>>k;
+       int ar[n];
+       int k = k%3;
+       for(int i=0;i<n;i++)
+       {
+           ar[i]=i+1;
+       }
+       for(int i=0;i<k;i++)
+       {
+           int start = 0;
+           int mid = n/2;
+           for(int j=0;j<n;j++)
+           {
+               if(j%2 == 0)
+               {
+                   ans[start] =  ar[j];
+                   start++;
+               }
+               else{
+                  ans[mid] = ar[j];
+                  mid++;
+               } 
+           }
+       }
+       for(int i=0;i<n;i++)
+       {
+           cout<<ans[i];
+       }
+    }
+}
