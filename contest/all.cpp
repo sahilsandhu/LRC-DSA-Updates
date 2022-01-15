@@ -94,3 +94,63 @@ int main()
        }
     }
 }
+
+
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    int t;
+    cin>>t;
+    while(t--)
+    {
+    int a1,a2,b1,b2,c1,c2;
+    cin>>a1>>a2;
+    cin>>b1>>b2;
+    cin>>c1>>c2;
+    int sum1 = a1+a2;
+    int sum2 = b1+b2;
+    int sum3 = c1+c2;
+    if(sum1>=sum2 && sum1>=sum3)
+    cout<<sum1<<endl;
+    else if(sum2>=sum1 && sum2>=sum3)
+    cout<<sum2<<endl;
+    else
+    cout<<sum3<<endl;
+    }
+    return 0;
+}
+
+int helper(vector<int>&temp, vector<int>&ans)
+{
+    while(ans.size()>1)
+    {
+        ans.erase(m%ans.size());
+    }
+    return ans[0];
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    int t;
+    cin>>t;
+    while(t--)
+    {
+       int n;
+       cin>>m>>x;
+       vector<int> ans;
+       for(int i=1;i<=x;i++)
+       {
+           vector<int> temp;
+           for(int j=0;j<i;j++)
+           {
+              temp.push_back(j+1);
+           }
+           helper(temp,ans,m);
+       }
+       cout<<ans;
+    }
+}
