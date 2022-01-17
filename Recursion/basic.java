@@ -357,7 +357,7 @@ int helper(vector<int>&nums, int tar, string ans)
         }
         return count;
     }
-//  ombination with infinite coins
+//  combination with infinite coins
 int helper(vector<int>&nums,int idx, int tar, string ans)
     {
         if(tar == 0)
@@ -502,6 +502,70 @@ int helper(vector<int>&nums,int idx, int tar, string ans)
     
         return count;
     }
+
+
+    //friends pairing tabulatiom
+    class Solution
+{
+public:
+     long mod = 1e9 + 7;
+    long helper(int n, vector<long> &dp)
+    {
+       if(n==0){
+       dp[n] = 1;
+       return dp[n];
+       }
+       if(dp[n] != -1)
+       return dp[n];
+       long ans1 = helper(n-1,dp);
+       long ans2 = n-2>=0 ? (n-1)*helper(n-2,dp):0;
+       dp[n] = (ans1+ans2)%mod;
+       return dp[n];
+    }
+    int countFriendsPairings(int n) 
+    { 
+        vector<long> v(n+1,-1);
+        return (int)helper(n,v);
+    }
+};    
+
+
+//memoization
+public:
+     long mod = 1e9 + 7;
+    long helper(int n)
+    {
+       long a = 1;
+       long b = 1;
+       for(int i=2;i<=n;i++)
+       {
+           long sum = b+(a*(i-1)%mod);
+          a = b;
+          b = sum%mod;
+       }
+       return b%mod;
+    }
+    int countFriendsPairings(int n) 
+    { 
+        return (int)helper(n);
+    }
+
+
+    // Partition into subsets
+    // REcurssion
+    public static long helper(int n,int k)
+    {
+        if(k==1 || n<=k)
+        return 1;
+        return helper(n-1,k-1) + (k)*helper(n-1,k);
+    }
+    public static long partitionKSubset(int n, int k) {
+     return helper(n,k);
+    }
+
+    // Memoization
+
+    
 
 
     public static void main(String[] args)
