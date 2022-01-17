@@ -154,3 +154,151 @@ int main()
        cout<<ans;
     }
 }
+
+
+// chef and FD
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    int n;
+    
+    while(n--)
+    {
+        int n,x;
+        cin>>n>>x;
+        vector<int> v(n,-1);
+        for(int i=0;i<n;i++)
+        {
+            cin>>v[i];
+        }
+        int flag = 0;
+        for(int i=0;i<n;i++)
+        {
+            int sum = 0;
+            for(int j=i;j<n;j++)
+            {
+                sum += a[j];
+                if(sum == x)
+                {
+                   cout<<sum<<" "<<j-i+1<<endl;
+                   flag = 1;
+                   break;
+                }
+
+            }
+            if(flag == 1)
+            break;
+        }
+        if(flag == 0)
+        cout<<-1<<endl;
+    }
+    return 0;
+}
+
+
+// crying colors
+
+// chef and FD
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    int n;
+    
+    while(n--)
+    {
+        int n;
+        cin>>n;
+        vector<vector<int>> v(3,vector<int>(3));
+        for(int i=0;i<3;i++)
+        {
+            for(int j=0;j<3;j++)
+            {
+                cin>>v[i][j];
+            }
+        }
+
+        int sum1 = v[0][1] + v[0][2] + v[1][2];
+        int sum2 = v[1][0] + v[2][0] + v[2][1];
+        if(v[0][0] == v[1][1] == v[2][2] == n)
+        cout<<"0";
+        else{
+            cout<<max(sum1,sum2)<<endl;
+        }
+
+    }
+    return 0;
+}
+
+// TREEMASTER
+
+class Edge{
+    int src;
+    int nbr;
+    int wt;
+    Edge(int src,int nbr,int wt)
+    {
+        this->src = src;
+        this->nbr = nbr;
+        this->wt = wt;
+    }
+};
+
+#include <iostream>
+#include<bits/stdc++.h>
+using namespace std;
+
+vector<pair<int,int>> NodetorootPath(vector<int> graph[],int src,int tar)
+{
+    if(src == tar)
+    {
+       vector<pair<int,int>> ans;
+       ans.push_back({src,0});
+       return ans;
+    }
+    vector<pair<int,int>> temp;
+    for(Edge ed : graph[src])
+    {
+        temp = NodetorootPath(graph,ed->nbr,tar);
+        if(temp.size() > 0)
+        {
+            temp.push({src,ed.wt});
+        }
+    }
+    return temp;
+}
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    int t;
+    while(t--)
+    {
+        int n,q;
+        cin>>n>>q;
+        vector<int> v(n+1,0);
+        vector<Edge> graph[n+1];
+        for(int i=0;i<=n;i++)
+        cin>>v[i];
+        int u,v,w;
+        int ed = n-1;
+        while(ed--)
+        {
+            cin>>u>>v>>w;
+            graph[u].push_back(Edge(u,v,w));
+            graph[v].push_back(Edge(v,u,w));
+        }
+
+        int x,y;
+        while(q--)
+        {
+            cin>>x>>y;
+            vector<pair<int,int>>leftcnt =  NodetorootPath(graph,1,x);
+            vector<pair<int,int>>leftcnt =  NodetorootPath(graph,1,x);
+        }
+    }
+    return 0;
+}
