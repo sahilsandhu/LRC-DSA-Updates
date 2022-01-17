@@ -565,7 +565,148 @@ public:
 
     // Memoization
 
+    //??
+
+    // Longest Palindrominc Subsequence
+    // Recurssion
+    class Solution {
+    int helper(String s, int i,int j)
+    {
+        if(i>=j)
+            return (i==j)?1:0;
+        int count = 0;
+        if(s.charAt(i) == s.charAt(j))
+        {
+            count=helper(s,i+1,j-1)+2;;
+            
+        }
+        else
+        count = count + Math.max(helper(s,i+1,j) , helper(s,i,j-1));
+        return count;
+    }
+    public int longestPalindromeSubseq(String s) {
     
+        return helper(s,0,s.length()-1);
+        
+    }
+}
+// Tabulation
+class Solution {
+    int helper(String s, int i,int j,int[][] dp)
+    {
+        if(i>=j)
+            return (i==j)?1:0;
+        if(dp[i][j] != 0)
+            return dp[i][j];
+        int count = 0;
+        if(s.charAt(i) == s.charAt(j))
+        {
+            count=helper(s,i+1,j-1,dp)+2;;
+            
+        }
+        else
+        count = count + Math.max(helper(s,i+1,j,dp) , helper(s,i,j-1,dp));
+        dp[i][j] = count;
+        return count;
+    }
+    public int longestPalindromeSubseq(String s) {
+        int[][] dp = new int[s.length()][s.length()];
+        return helper(s,0,s.length()-1,dp);
+        
+    }
+}
+
+
+/// memoization 
+
+class Solution {
+    int helper(String s, int I,int J,int[][] dp)
+    {
+        int n = s.length();
+        for(int gap = 0; gap<n;gap++)
+        {
+            for(int i=0,j=gap;j<n;i++,j++)
+            {
+                if(i>=j){
+                dp[i][j] =  (i==j)?1:0;
+                    continue;
+                }
+                if(s.charAt(i) == s.charAt(j))
+                {
+                dp[i][j]=dp[i+1][j-1]+2;;
+                }
+                else
+                dp[i][j] = Math.max(dp[i+1][j] , dp[i][j-1]);
+            }
+        }
+        
+        return dp[I][J];
+    }
+    public int longestPalindromeSubseq(String s) {
+        int[][] dp = new int[s.length()][s.length()];
+        return helper(s,0,s.length()-1,dp);
+        
+    }
+}
+
+// longest common subsequence
+
+// Recurssion + tabulation
+class Solution {
+     int helper(String s1,String s2, int i,int j,int[][] dp)
+    {
+        if(i == s1.length() || j == s2.length())
+            return 0;
+        if(dp[i][j] != 0)
+            return dp[i][j];
+        int count = 0;
+        if(s1.charAt(i) == s2.charAt(j))
+        {
+            count = helper(s1,s2,i+1,j+1,dp)+1;
+            
+        }
+        else
+        count = count + Math.max(helper(s1,s2,i+1,j,dp) , helper(s1,s2,i,j+1,dp));
+        return dp[i][j] = count;
+    }
+    public int longestCommonSubsequence(String text1, String text2) {
+        int[][] dp = new int[text1.length()][text2.length()];
+        return helper(text1,text2,0,0,dp);
+    }
+}
+
+// memoization
+
+class Solution {
+     int helper(String s1,String s2, int I,int J,int[][] dp)
+    {
+        int n = s1.length();
+        int m = s2.length();
+         for(int i=0 ;i<=n;i++)
+         {
+             for(int j=0;j<=m;j++)
+             {
+                  if(i == 0 || j ==0 ){
+                    dp[i][j] = 0;
+                  continue;
+                  }
+                  
+                  if(s1.charAt(i-1) == s2.charAt(j-1))
+                  {
+                     dp[i][j] = dp[i-1][j-1]+1;
+            
+                  }
+                 else
+                 dp[i][j] =  Math.max(dp[i-1][j] , dp[i][j-1]);
+             }
+         }
+         return dp[I][J];
+    }
+    public int longestCommonSubsequence(String text1, String text2) {
+        int[][] dp = new int[text1.length()+1][text2.length()+1];
+        return helper(text1,text2,text1.length(),text2.length(),dp);
+    }
+}
 
 
     public static void main(String[] args)
