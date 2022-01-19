@@ -709,6 +709,81 @@ class Solution {
 }
 
 
+// Edit Distance
+
+class Solution {
+public:
+    int helper(string s1, string s2, int I,int J,vector<vector<int>> &dp)
+    {
+        for(int i=0;i<=I;i++)
+        {
+            for(int j=0;j<=J;j++){
+               if(i == 0 || j == 0){
+               dp[i][j] = i==0?j:i;
+               continue;
+               }
+               int insert = dp[i][j-1];
+               int deletee = dp[i-1][j];
+               int replace = dp[i-1][j-1];
+               if(s1[i-1] == s2[j-1])
+               {
+               dp[i][j] = replace;
+               }
+               else
+               {
+               dp[i][j] = min(min(insert,deletee),replace) + 1;
+               } 
+            }
+        }
+        
+        return dp[I][J];
+    }
+    int minDistance(string word1, string word2) {
+        vector<vector<int>> dp(word1.size()+1,vector<int>(word2.size()+1,-1)); 
+        return helper(word1,word2,word1.size(),word2.size(),dp);
+        
+    }
+};
+
+// Follow up question : 1. we are provided some cost of insertion, deletion
+// replacement we need to minimize the cost
+
+#include<bits/stdc++.h>
+using namespace std;
+int helper(string s1,string s2,int i,int j,int ins,int del,int rep,vector<vector<int>>&dp){
+    if(i == 0 || j == 0)
+    {
+        if(i == 0 && j==0)
+        return dp[i][j] = 0;
+        else
+        return dp[i][j] = (i == 0) ? j*ins : i*del;
+    }
+    if(dp[i][j] != -1)
+    return dp[i][j];
+    int insert = helper(s1,s2,i,j-1,ins,del,rep,dp);
+    int deletee = helper(s1,s2,i-1,j,ins,del,rep,dp);
+    int replace = helper(s1,s2,i-1,j-1,ins,del,rep,dp);
+    if(s1[i-1] == s2[j-1])
+    dp[i][j] = replace;
+    else
+    dp[i][j] = min(min(insert+ins,deletee+del),replace+rep);
+    return dp[i][j];
+}
+int main()
+{
+string s1 = "horse";
+string s2 = "ros";
+int ins = 2;
+int del = 3;
+int rep = 4;
+vector<vector<int>>dp(s1.size()+1,vector<int>(s2.size()+1,-1));
+cout<<helper(s1,s2,s1.size(),s2.size(),ins,del,rep,dp);
+}
+
+
+// f
+
+
     public static void main(String[] args)
     {
      
