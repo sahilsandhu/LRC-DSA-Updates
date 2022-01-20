@@ -780,8 +780,59 @@ vector<vector<int>>dp(s1.size()+1,vector<int>(s2.size()+1,-1));
 cout<<helper(s1,s2,s1.size(),s2.size(),ins,del,rep,dp);
 }
 
+// count aibjck
+int fun(string &s) {
+        //code here
+        long empty = 1;
+        long acount = 0;
+        long bcount = 0;
+        long ccount = 0;
+        long mod = 1e9+7;
+        for(int i=0;i<s.size();i++)
+        {
+            if(s[i] == 'a')
+            {
+                acount = acount + (empty + acount)%mod;
+            }
+            else if(s[i] == 'b')
+            {
+                bcount = (bcount + (acount + bcount))%mod;
+            }
+            else if(s[i] == 'c')
+            {
+                ccount = (ccount + (ccount + bcount))%mod;
+            }
+        }
+        return (int)(ccount%mod);
+    }
 
-// f
+// word break
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        HashSet<String> set = new HashSet<>();
+        int len = 0;
+        for(String ss: wordDict)
+        {
+            set.add(ss);
+            len = Math.max(ss.length(),len);
+        }
+        boolean[] dp = new boolean[s.length()+1];
+        dp[0] = true;
+        for(int i=0;i<s.length();i++)
+        {
+            if(!dp[i]) 
+                continue;
+            for(int l = 1;l<=len && i+l<=s.length();l++)
+            {
+               
+                    String str = s.substring(i,i+l);
+                    if(set.contains(str))
+                        dp[i+l] = true;
+            }
+        }
+        return dp[s.length()];
+    }
+}
 
 
     public static void main(String[] args)
