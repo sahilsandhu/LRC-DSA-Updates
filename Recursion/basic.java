@@ -834,6 +834,145 @@ class Solution {
     }
 }
 
+// Longest Increasing Subsequence
+class Solution {
+    int helper(int[] ar,int idx,int[] dp)
+    {
+        if(dp[idx] != 0)
+            return dp[idx];
+        int max = 1;
+        for(int i = idx-1; i>=0;i--)
+        {
+            if(ar[i] < ar[idx])
+            {
+                int ans = helper(ar,i,dp)+1;
+                max = Math.max(ans,max);
+            }
+        }
+        return dp[idx] = max;
+    }
+    public int lengthOfLIS(int[] nums) {
+        int[] dp = new int[nums.length];
+        int ans = 0;
+        for(int i=0;i<nums.length;i++)
+        {
+            int rans = helper(nums,i,dp);
+            ans = Math.max(ans,rans);
+        }
+        return ans;
+    }
+}
+
+// LIS Tabulation
+
+int helper(int[] ar,int idx,int[] dp)
+    {
+        int n = dp.length,maxlen = 0;
+       for(int i=0;i<dp.length;i++)
+       {
+           dp[i] = 1;
+           for(int j = i-1;j>=0;j--)
+           {
+               if(ar[i]>ar[j])
+                   dp[i] = Math.max(dp[i],dp[j]+1);
+           }
+           maxlen = Math.max(dp[i],maxlen);
+       }
+        return maxlen;
+    }
+    public int lengthOfLIS(int[] nums) {
+        int[] dp = new int[nums.length];
+        // int ans = 0;
+        // for(int i=0;i<dp.length;i++)
+        // {
+        //    int rans = 
+        //   ans = Math.max(rans,ans);
+        // }
+        return helper(nums,0,dp);
+    }
+
+// Longest Decreasing Subsequence
+
+class Solution {
+    int helper(int[] ar,int idx,int[] dp)
+    {
+        int n = dp.length,maxlen = 0;
+       for(int i=0;i<dp.length;i++)
+       {
+           dp[i] = 1;
+           for(int j = i-1;j>=0;j--)
+           {
+               if(ar[i]<ar[j])
+                   dp[i] = Math.max(dp[i],dp[j]+1);
+           }
+           maxlen = Math.max(dp[i],maxlen);
+       }
+        return maxlen;
+    }
+    public int lengthOfLIS(int[] nums) {
+        int[] dp = new int[nums.length];
+        // int ans = 0;
+        // for(int i=0;i<dp.length;i++)
+        // {
+        //    int rans = 
+        //   ans = Math.max(rans,ans);
+        // }
+        return helper(nums,0,dp);
+    }
+}
+
+// Longest Bitonic Subsequene
+class Solution
+{
+    public void helper(int[] ar,int n,int[] lis)
+    {
+        
+        for(int i=0;i<n;i++)
+        {
+            lis[i] = 1;
+            for(int j = i-1;j>=0;j--)
+            {
+                if(ar[j] < ar[i])
+                {
+                    lis[i] = Math.max(lis[i],lis[j]+1); 
+                }
+            }
+        }
+    }
+    public void helper_lis(int[] ar,int n,int[] lis)
+    {
+        
+        for(int i=n-1;i>=0;i--)
+        {
+            lis[i] = 1;
+            for(int j = i+1;j<n;j++)
+            {
+                if(ar[j] < ar[i])
+                {
+                    lis[i] = Math.max(lis[i],lis[j]+1); 
+                }
+            }
+        }
+    }
+    public int LongestBitonicSequence(int[] nums)
+    {
+        int n = nums.length;
+        int[] lis = new int[n];
+        int[] lis_r = new int[n];
+        helper(nums,n,lis);
+        helper_lis(nums,n,lis_r);
+        int ans = 0;
+        for(int i=0;i<n;i++)
+        {
+            ans = Math.max(lis[i]+lis_r[i]-1,ans);
+        }
+        
+        return ans;
+        // Code here
+    }
+}
+
+// Longest Reverse Bitnoic Subsequence
 
     public static void main(String[] args)
     {
