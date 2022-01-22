@@ -354,4 +354,231 @@ public int minCostClimbingStairs_(int[] cost,int N,int[] dp)
 // There is a dice which rolls and give a value (1,2,3,4,5,6), we are at position 0, and need to reach the 10.
 // Each time the we rolls the dice and take the number of steps which comes up on the dice. Calculate the different
 // number of ways with which we reach on the position n (10).
- 
+
+public static int helper(int n)
+    {
+        if(n<0)
+        return 0;
+        if(n == 0)
+        {
+            return 1;
+        }
+        int count = 0;
+        for(int i=1;i<=6;i++)
+        {
+            count += helper(n-i);
+        }
+        return count;
+    }
+
+// Moves Question:
+// There is an array of moves having different values, we can take the jumps which is given in the array. Tells us the 
+// numer of ways to reach the top 
+
+// Leetcode 91 Memoizaton
+public int numDecodings_(String s,int idx, int[] dp){
+        if(idx == s.length())
+            return dp[idx] = 1;
+        if(s.charAt(idx) == '0')
+            return 0;
+        if(dp[idx]!= -1)
+            return dp[idx];
+        int count = 0;
+        count += numDecodings_(s,idx+1,dp);
+        if(idx < s.length()-1)
+        {
+            int num = (s.charAt(idx)-'0')*10 + (s.charAt(idx+1)-'0');
+            if(num<=26)
+                count += numDecodings_(s,idx+2,dp);
+        }
+        return dp[idx] = count;
+    }
+    public int numDecodings(String s) {
+        int[] dp = new int[s.length()+1];
+        Arrays.fill(dp,-1);
+        return numDecodings_(s,0,dp);
+    }
+
+// Leetcode 91 Tabulation
+
+ public int numDecodings_(String s,int idx, int[] dp){
+        for(idx=s.length(); idx>=0; idx--){
+        if(idx == s.length()){
+             dp[idx] = 1;
+            continue;
+        }
+        if(s.charAt(idx) == '0'){
+            dp[idx] =  0;
+            continue;
+        } 
+        int count = 0;
+        count += dp[idx+1];
+        if(idx < s.length()-1)
+        {
+            int num = (s.charAt(idx)-'0')*10 + (s.charAt(idx+1)-'0');
+            if(num<=26)
+                count += dp[idx+2];
+        }
+        dp[idx] = count;
+        }
+        return dp[0];
+    }
+    public int numDecodings(String s) {
+        int[] dp = new int[s.length()+1];
+        //Arrays.fill(dp,-1);
+        return numDecodings_(s,0,dp);
+    }
+
+// Optimization with 2 pointers approach
+
+public int numDecodings_(String s,int idx, int[] dp){
+        int a = 1, b = 0;
+        for(idx=s.length()-1; idx>=0; idx--)
+        {
+            int sum = 0;
+          char ch = s.charAt(idx);
+          if(ch!='0')
+          {
+              sum+=a;
+              if(idx<s.length()-1)
+              {
+                  char ch1 = s.charAt(idx+1);
+                  int num = (ch-'0')*10 + (ch1-'0');
+                  if(num <= 26)
+                      sum+=b;
+              }
+          }
+        b = a;
+        a = sum;
+        }
+        return a;
+    }
+
+// 
+
+int mod = (int)1e9+7;
+    public long numDecodings_(int idx,String s,long[] dp)
+    {
+        int n = s.length();
+        if(idx == n)
+            return dp[idx] = 1;
+        
+        if(dp[idx]!= -1)
+            return dp[idx];
+        char ch = s.charAt(idx);
+        if(ch == '0')
+            return dp[idx] = 0;
+        
+        long count = 0;
+
+        if(ch == '*')
+        {
+            count = (count + numDecodings_(idx+1,s,dp) * 9)%mod;
+            if(idx<n-1)
+            {
+               if(s.charAt(idx+1) == '*')
+                count = (count + numDecodings_(idx+2,s,dp)*15)%mod; 
+                
+              else if(s.charAt(idx+1)<='6' && s.charAt(idx+1)>='0')
+                count=(count+ numDecodings_(idx+2,s,dp)*2)%mod;  
+            
+              else if(s.charAt(idx+1)>='7' && s.charAt(idx+1)<='9')
+                 count= (count+ numDecodings_(idx+2,s,dp)*1)%mod;
+                }
+            }
+        else
+        {
+            count = (count + numDecodings_(idx+1,s,dp))%mod;
+            
+            if(idx<n-1)
+            {
+                char ch1 = s.charAt(idx+1);
+                //char ch = s.charAt(idx);
+                if(ch1=='*' && ch=='1')
+                {
+                    count = (count + 9*numDecodings_(idx+2,s,dp)) % mod;       
+                }
+                else if(ch1=='*' && ch=='2')
+                {
+                    count = (count + 6*numDecodings_(idx+2,s,dp)) % mod;
+                }
+                else if(s.charAt(idx+1)!='*')
+                {
+                    int num = (s.charAt(idx)-'0')*10 + (s.charAt(idx+1)-'0');
+                    if(num<=26)
+                        count=(count+numDecodings_(idx+2,s,dp))%mod;
+                }
+                 
+            }
+        }
+         dp[idx] = count;
+        return count;
+    }
+    public int numDecodings(String s) {
+        long[] dp = new long[s.length()+1];
+        Arrays.fill(dp,-1);
+        return (int)numDecodings_(0,s,dp);
+    }
+
+// goldmine 
+static int[][] dirs = {{-1,1},{0,1},{1,1}};
+    static int maxGold_(int sr,int sc,int dr,int dc,int[][] M,int[][] dp)
+    {
+        if(sc == dc)
+        return dp[sr][sc] = M[sr][sc];
+        if(dp[sr][sc]!= -1)
+        return dp[sr][sc];
+        int gold = 0;
+        for(int[] dir : dirs)
+        {
+            int x = sr+dir[0];
+            int y = sc+dir[1];
+            if(x>=0 && y>=0 && x<=dr && y<=dc)
+            {
+                gold = Math.max(gold,maxGold_(x,y,dr,dc,M,dp)+M[sr][sc]);
+            }
+        }
+        return dp[sr][sc] = gold;
+    }
+    static int maxGold(int n, int m, int M[][])
+    {
+        int maxgold = 0;
+        int[][] dp = new int[n][m];
+        for(int[] d: dp)
+        Arrays.fill(d,-1);
+        for(int i=0;i<n;i++)
+        {
+            maxgold = Math.max(maxgold,maxGold_(i,0,n-1,m-1,M,dp));
+        }
+        return maxgold;
+    }
+
+// goldmine back engg
+
+public static void maxGold_backEngg(int[][] dp, int sr,int sc,String s)
+    {
+        if(sc == dp[0].length-1)
+        {
+            s = s+"("+sr+" "+sc+")";
+            System.out.println(s);
+            return;
+        }
+        int idx = -1;
+        int maxgold = 0;
+        for(int i =0;i<3;i++)
+        {
+            int x = sr+dirs[i][0];
+            int y = sc+dirs[i][1];
+            if(x>=0 && y>=0 && x<dp.length && y<dp[0].length && dp[x][y] > maxgold)
+            {
+                idx = i;
+                maxgold = dp[x][y];
+            }
+            if(idx != -1)
+            {
+                int r = sr + dirs[i][0], c = sc + dirs[i][1];
+                maxGold_backEngg(dp,r,c,s+"("+sr+" "+sc+")->");
+            }
+        }
+    }
+
