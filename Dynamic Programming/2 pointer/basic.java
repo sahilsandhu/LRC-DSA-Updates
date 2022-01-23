@@ -582,3 +582,435 @@ public static void maxGold_backEngg(int[][] dp, int sr,int sc,String s)
         }
     }
 
+// Maximum Path sum in a Matrix
+
+static int[][] dirs = {{1,0},{1,-1},{1,1}};
+    static int maximumPath_(int sr,int sc,int n,int[][] matrix,int[][] dp)
+    {
+        if(sr == n-1)
+        return dp[sr][sc] = matrix[sr][sc];
+        if(dp[sr][sc]!= -1)
+        return dp[sr][sc];
+        int count = 0;
+        for(int[] dir: dirs){
+            int x = sr + dir[0];
+            int y = sc + dir[1];
+            if(x>=0 && y>=0 && x<n && y<n)
+            {
+                count = Math.max(count,maximumPath_(x,y,n,matrix,dp) + matrix[sr][sc]);
+            }
+            
+        }
+        return dp[sr][sc] = count;
+    }
+    static int maximumPath(int N, int matrix[][])
+    {
+        int[][] dp = new int[N][N];
+        for(int[] d : dp)
+        Arrays.fill(d,-1);
+        int maxs = 0;
+        for(int i=0;i<N;i++)
+        {
+            maxs = Math.max(maxs,maximumPath_(0,i,N,matrix,dp));
+        }
+        return maxs;
+        // code here
+    }
+
+    // Friends PAiring Memoization
+
+ int mod = (int)1e9 + 7;
+    public long countFriendsPairings_(int n,long[] dp)
+    {
+        if(n == 0)
+        return dp[n] = 1;
+        if(n<0)
+        return 0;
+        if(dp[n] != -1)
+        return dp[n];
+        long ans = countFriendsPairings_(n-1,dp)+ (n-1) * countFriendsPairings_(n-2,dp);
+        return dp[n] = ans%mod;
+    }
+    public long countFriendsPairings(int n) 
+    { 
+       //code here
+       long[] dp = new long[n+1];
+       Arrays.fill(dp, -1);
+       return countFriendsPairings_(n,dp);
+    }
+
+// Tabulation  ( 2 pointers approach )
+
+ int mod = (int)1e9 + 7;
+    public long countFriendsPairings_(int n,long[] dp)
+    {
+       long a = 1;
+       long b = 1;
+       for(int i=2;i<=n;i++)
+       {
+           long sum = (a + b * (i-1))%mod;
+            b  = a;
+            a = sum;
+       }
+       return a;
+    }
+
+// Partition Into Subsets
+
+ public static long helper(int n,int k,long[][]dp)
+    {
+        if(n == k || k==1)
+        return 1;
+        
+        return helper(n-1,k-1,dp) + k*helper(n-1,k,dp);
+    }
+
+// Tabulation
+
+public static long helper(int N,int K,long[][]dp)
+    {
+        for(int n=1;n<=N;n++)
+        {
+            for(int k=1;k<=K;k++)
+            {
+            if(n == k || k==1){
+                  dp[n][k] = 1; 
+                  continue;
+            }
+        
+            dp[n][k] = dp[n-1][k-1] + k*dp[n-1][k];  
+            }
+        }
+        return dp[N][K];
+        
+    }
+
+// LIS tabulation
+ public int lCS_(String s1,int I,String s2,int J,int[][]dp)
+    {
+        for(int idx1=0;idx1<=I ;idx1++)
+        {
+            for(int idx2 =0;idx2<=J;idx2++)
+            {
+           if(idx1 == 0 || idx2 == 0)
+           {
+               dp[idx1][idx2] = 0;
+               continue;
+           }
+           int count = 0;
+           if(s1.charAt(idx1-1) == s2.charAt(idx2-1)){
+           count = dp[idx1-1][idx2-1]+1;
+        }
+        else
+            count = Math.max(dp[idx1-1][idx2],dp[idx1][idx2-1]);
+                 dp[idx1][idx2] = count;
+            }
+           
+        }
+        
+        return dp[I][J];
+    }
+ 
+//  Longest Palindromic Subsequence  
+
+int helper(String s, int i,int j,int[][] dp)
+    {
+        if(i>=j)
+            return (i==j)?1:0;
+        if(dp[i][j] != 0)
+            return dp[i][j];
+        int count = 0;
+        if(s.charAt(i) == s.charAt(j))
+        {
+            count=helper(s,i+1,j-1,dp)+2;;
+            
+        }
+        else
+        count = count + Math.max(helper(s,i+1,j,dp) , helper(s,i,j-1,dp));
+        dp[i][j] = count;
+        return count;
+    }
+
+// Longest common substring
+
+int longestCommonSubstr(String s1, String s2, int I, int J){
+        // code here
+        int[][] dp = new int[I+1][J+1];
+        int result = 0;
+        for(int idx1=0;idx1<=I ;idx1++)
+        {
+            for(int idx2 =0;idx2<=J;idx2++)
+            {
+                if(idx1 == 0 || idx2 == 0)
+                {
+                   dp[idx1][idx2] = 0;
+                   continue;
+                }
+           if(s1.charAt(idx1-1) == s2.charAt(idx2-1)){
+               dp[idx1][idx2] = dp[idx1-1][idx2-1]+1;
+               result = Math.max(dp[idx1][idx2],result);
+           }
+           else
+               dp[idx1][idx2] = 0;
+            }
+           
+        }
+        return result;
+    }
+
+// Leetcode 115 
+
+public int numDistinct_(String s,String t,int m,int n,int[][] dp)
+    {
+       if(m<n)
+           return 0;
+        if(n == 0)
+            return 1;
+        if(dp[m][n] != -1)
+            return dp[m][n];
+        int count = 0;
+        if(s.charAt(m-1) == t.charAt(n-1))
+        {
+            count += numDistinct_(s,t,m-1,n-1,dp) + numDistinct_(s,t,m-1,n,dp);
+        }
+        else
+        {
+            count += numDistinct_(s,t,m-1,n,dp);
+        }
+        return dp[m][n] = count;
+    }
+    public int numDistinct(String s, String t) {
+        int m = s.length();
+        int n = t.length();
+        int dp[][] = new int[m+1][n+1];
+        for(int[] d: dp)
+            Arrays.fill(d,-1);
+        return numDistinct_(s,t,m,n,dp);
+    }
+
+// Leetcode 72
+public int minDistance_(String s1,String s2,int m,int n,int[][]dp)
+    {
+        
+        if(m==0 || n == 0)
+            return dp[m][n] = m==0?n:m;
+        if(dp[m][n] != -1)
+            return dp[m][n];
+        int delete = minDistance_(s1,s2,m-1,n,dp); 
+        int replace = minDistance_(s1,s2,m-1,n-1,dp);
+        int add = minDistance_(s1,s2,m,n-1,dp);
+        int count = 0;
+        if(s1.charAt(m-1) == s2.charAt(n-1))
+        {
+           count =  replace;
+        }
+        else
+        {
+            count = Math.min(replace,Math.min(add,delete))+1;
+        }
+        return dp[m][n] = count;
+        
+    }
+
+// min distance 02
+
+public int minDistance_(String s1,String s2,int m,int n,int[][]dp,int []cost)
+    {
+        
+        if(m==0 || n == 0)
+            return dp[m][n] = (m==0?n*cost[1]:m*cost[2];
+        if(dp[m][n] != -1)
+            return dp[m][n];
+        int delete = minDistance_(s1,s2,m-1,n,dp); 
+        int replace = minDistance_(s1,s2,m-1,n-1,dp);
+        int add = minDistance_(s1,s2,m,n-1,dp);
+        int count = 0;
+        if(s1.charAt(m-1) == s2.charAt(n-1))
+        {
+           count =  replace;
+        }
+        else
+        {
+            count = Math.min(replace + cost[0], Math.min(add+cost[1],delete + cost[2]))+1;
+        }
+        return dp[m][n] = count;
+        
+    }
+
+// Leetcode 44
+int isMatch_(String s1,String s2,int l1,int l2,int[][]dp)
+    {
+       if(l1 == 0 || l2 == 0)
+       {
+           if(l1 == 0 && l2 == 0)
+           {
+               return dp[l1][l2] = 1;
+           }
+           else if(l2 == 1 && s2.charAt(l2-1) == '*')
+           {
+               return dp[l1][l2] = 1;
+           }
+           else
+           {
+               return dp[l1][l2] = 0;
+           }
+       }
+        if(dp[l1][l2] != -1)
+            return dp[l1][l2];
+        
+        
+        if(s1.charAt(l1-1) == s2.charAt(l2-1) || s2.charAt(l2-1) == '?')
+            return dp[l1][l2] = isMatch_(s1,s2,l1-1,l2-1,dp);
+        
+        else if(s2.charAt(l2-1) == '*')
+        {
+            boolean res = false;
+            res = res || (isMatch_(s1,s2,l1-1,l2,dp) == 1); // * string
+            res = res || (isMatch_(s1,s2,l1,l2-1,dp) == 1); // empty String
+            return dp[l1][l2] = res ? 1 : 0;
+        }
+        else
+        {
+            return dp[l1][l2] = 0;
+        }
+        ///return 0;
+    }
+    public boolean isMatch(String s, String p) {
+    if((s.length() == 0 && p.length() == 0) )
+        return true;
+    if(p.length()==0)
+        return false;
+    String str = "";
+    str+= p.charAt(0)+"";
+    int i = 1;
+    while(i<p.length())
+    {
+        while(i<p.length() && p.charAt(i)=='*' && p.charAt(i-1)=='*')
+            i++;
+        if(i<p.length())
+            str+=p.charAt(i);
+        i++;
+    }
+        int l1 = s.length();
+        int l2 = str.length();
+        int[][] dp = new int[l1+1][l2+1];
+        for(int[] d : dp)
+            Arrays.fill(d,-1);
+        System.out.println(str);
+        return isMatch_(s,str,l1,l2,dp)==1;
+    }
+
+// Leetcode 1035
+
+public int lCS_(int[] s1,int I,int[] s2,int J,int[][]dp)
+    {
+        for(int idx1=0;idx1<=I ;idx1++)
+        {
+            for(int idx2 =0;idx2<=J;idx2++)
+            {
+           if(idx1 == 0 || idx2 == 0)
+           {
+               dp[idx1][idx2] = 0;
+               continue;
+           }
+           int count = 0;
+           if(s1[idx1-1] == s2[idx2-1]){
+           count = dp[idx1-1][idx2-1]+1;
+        }
+        else
+            count = Math.max(dp[idx1-1][idx2],dp[idx1][idx2-1]);
+                 dp[idx1][idx2] = count;
+            }
+           
+        }
+        
+        return dp[I][J];
+    }
+    
+    public int maxUncrossedLines(int[] nums1, int[] nums2) {
+    
+        int n = nums1.length;
+        int m = nums2.length;
+        int[][] dp = new int[n+1][m+1];
+        return lCS_(nums1,n,nums2,m,dp);
+    }
+
+//  Leetcode 05
+
+public String longestPalindrome(String s) {
+        int n = s.length();
+        int[][] dp = new int[n][n];
+        String str= "";
+        int max = 0;
+        for(int gap = 0;gap<n;gap++)
+        {
+            for(int i=0,j=gap;j<n;i++,j++)
+            {
+                if(gap == 0)
+                {
+                  dp[i][j] = 1;
+                  max=1;
+                  str = s.substring(i,j+1);
+                }
+                else if(gap == 1 && s.charAt(i) == s.charAt(j))
+                {
+                    dp[i][j] = 2;
+                    if(dp[i][j] > max)
+                    {
+                        str = s.substring(i,j+1);
+                        max = dp[i][j];
+                    }
+                }
+                else
+                {
+                    dp[i][j] = (s.charAt(i) == s.charAt(j) && dp[i+1][j-1]!=0)?dp[i+1][j-1]+2 : 0;
+                    if(dp[i][j] != 0 && dp[i][j] > max)
+                    {
+                        max = dp[i][j];
+                        str = s.substring(i,j+1);
+                    }
+                }
+            }
+        }
+        return str;
+    }
+
+// leetcode 132
+
+    public int minCut_(String s,boolean[][] dp,int si,int ei,int[] pdp)
+    {
+        if(dp[si][ei])
+            return 0;
+        if(pdp[si] != -1)
+            return pdp[si];
+        int minans = (int)1e8;
+        for(int cut = si;cut<=ei;cut++)
+        {
+            if(dp[si][cut])
+            {
+                minans = Math.min(minans, minCut_(s,dp,cut+1,ei,pdp)+1);
+            }
+        }
+        return pdp[si] = minans;
+    }
+    public int minCut(String s) {
+        int n = s.length();
+        boolean[][] dp = new boolean[s.length()][s.length()];
+        for(int gap=0;gap<n;gap++)
+        {
+            for(int i=0,j=gap;j<n;i++,j++)
+            {
+                if(gap == 0)
+                    dp[i][j] = true;
+                else if(gap == 1 && s.charAt(i) == s.charAt(j))
+                    dp[i][j] = true;
+                else
+                    dp[i][j] = (s.charAt(i) == s.charAt(j) && dp[i+1][j-1]);
+            }
+        }
+        int[] pdp = new int[n+1];
+        Arrays.fill(pdp,-1);
+        return minCut_(s,dp,0,n-1,pdp);
+    }
+
+// 
