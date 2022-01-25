@@ -461,4 +461,225 @@ class Solution {
     }
 }
 
-//
+// Largest bst subtree
+
+public static class pair{
+        int min,max,size;
+        pair(int min,int m,int size)
+        {
+            this.max = max;
+            this.min = min;
+            this.size = size;
+        }
+    }
+    public static pair largestBst_(Node root)
+    {
+        if(root == null)
+        {
+            return new pair(Integer.MAX_VALUE,Integer.MIN_VALUE,0);
+        }
+        pair lp = largestBst_(root.left);
+        pair rp = largestBst_(root.right);
+       
+        if(lp.max < root.data && root.data < rp.min){
+            return new pair(Math.min(root.data,lp.min),Math.max(root.data,rp.max),lp.size+rp.size+1);
+        }
+    return new pair(Integer.MIN_VALUE,Integer.MAX_VALUE,Math.max(lp.size,rp.size));
+
+    }
+    static int largestBst(Node root)
+    {
+      return largestBst_(root).size;
+    }
+
+//  camera in BT
+
+ public static int camera = 0;
+    public int minCameraCover_(TreeNode root)
+    {
+        if(root == null)
+            return 0;
+        int ls = minCameraCover_(root.left);
+        int rs = minCameraCover_(root.right);
+        if(ls == -1 || rs == -1)
+        {
+            camera++;
+            return 1;
+        }
+        if(ls==1 || rs == 1)
+            return 0;
+        return -1;
+    }
+    public int minCameraCover(TreeNode root) {
+        camera = 0;
+        if(minCameraCover_(root) == -1)
+            camera++;
+        return camera;
+    }
+
+// Recover BST
+class Solution {
+    public TreeNode predecessor(TreeNode root,TreeNode curr)
+    {
+        while(root.right != null && root.right != curr)
+            root = root.right;
+        return root;
+    }
+    public TreeNode recoverTree_(TreeNode root)
+    {
+        TreeNode curr = root;
+        TreeNode a = null,b = null;
+        TreeNode prev = null;
+        while(curr != null)
+        {
+            TreeNode left = curr.left;
+            if(left == null)
+            {
+                if(prev!= null && prev.val > curr.val)
+                {
+                if(a == null)
+                    a = prev;
+                b = curr;}
+                prev = curr;
+                curr = curr.right;
+            }
+            else
+            {
+                TreeNode node = predecessor(curr.left,curr);
+                if(node.right == null)
+                {
+                    node.right = curr;
+                    curr = curr.left;
+                    
+                }
+                else
+                {
+                  node.right = null;
+                  // add to list
+                if(prev.val > curr.val)
+                {
+                if(a == null)
+                    a = prev;
+                b = curr;}
+                prev = curr;
+                  curr = curr.right;
+                  
+                }
+            }
+        }
+        if(a!=null)
+        {
+            int temp = a.val;
+            a.val = b.val;
+            b.val = temp;
+        }
+        return root;
+    }
+    public void recoverTree(TreeNode root) {
+         recoverTree_(root);
+    }
+}
+// Construct BT from  preorder and inorder 
+
+class Solution {
+    public TreeNode buildTree_(int[] preorder,int[] inorder,int ps,int pe,int is,int ie){
+        if(ps>pe)
+        return null;
+        TreeNode node = new TreeNode(preorder[ps]);
+        int idx = is;
+        while(inorder[idx] != preorder[ps])
+        idx++;
+        
+        int count = idx - is;
+        node.left = buildTree_(preorder,inorder,ps+1,ps+count,is,count-1);
+        node.right = buildTree_(preorder,inorder,ps+count+1,pe,idx+1,ie);
+        return node;
+        
+    } 
+    public TreeNode buildTree(int[] preorder, int[] inorder)     {
+       
+        return buildTree_(preorder,inorder,0,preorder.length-1,0,inorder.length-1);
+    }
+}
+
+// construct BT from inorder and postorder
+
+class Solution {
+    public  TreeNode buildTree_(int[] inorder,int is,int ie,int[] postorder,int ps,int pe)
+    {
+        if(ps>pe)
+        {
+            return null;
+        }
+        TreeNode node = new TreeNode(postorder[pe]);
+        int idx = is;
+        while(inorder[idx] != postorder[pe])
+        idx++;
+        int count = idx-is;
+        node.left = buildTree_(inorder,is,idx-1,postorder,ps,ps+count-1);
+        node.right = buildTree_(inorder,idx+1,ie,postorder,ps+count,pe-1);
+        return node;
+    }
+
+    public  TreeNode buildTree(int[] inorder, int[] postorder) {
+        return buildTree_(inorder,0,inorder.length-1,postorder,0,postorder.length-1);
+    }
+}
+
+// construct BT from preorder and postorder
+
+class Solution {
+     public  TreeNode constructFromPrePost_(int[]preorder,int[]postorder,int pes,int pee,int pos,int poe)
+    {
+        if(pes > pee)
+        return null;
+        TreeNode node = new TreeNode(preorder[pes]);
+        if(pes == pee)
+        return node;
+        int idx = pos;
+        while(postorder[idx]!=preorder[pes+1])
+        idx++;
+        int count = idx-pos+1;
+        node.left = constructFromPrePost_(preorder,postorder,pes+1,pes+count,pos,idx);
+        node.right = constructFromPrePost_(preorder,postorder,pes+count+1,pee,idx+1,pos);
+        return node;
+        
+    }
+    public  TreeNode constructFromPrePost(int[] pre, int[] post) {
+        return constructFromPrePost_(pre,post,0,pre.length-1,0,post.length);
+    }
+}
+
+// construct BT from inorder and levelorder
+
+ public static TreeNode buildTree_(int[] inorder,int[] levelorder,int si,int ei)
+  {
+      if(si > ei)
+      return null;
+      
+      TreeNode node = new TreeNode(levelorder[0]);
+      
+      HashSet<Integer> set = new HashSet<>();
+      int idx = si;
+      
+      while(inorder[idx] != levelorder[0])
+      idx++;
+      
+      for(int i=si;i<idx;i++)
+      set.add(inorder[i]);
+      
+      int n = ei-si+1;
+      int[] left = new int[set.size()];
+      int[] right = new int[n - set.size()];
+      int li=0,ri=0;
+      for(int i=1;i<levelorder.length;i++)
+      {
+          if(set.contains(levelorder[i]))
+          left[li++] = levelorder[i];
+          else
+          right[ri++] = levelorder[i];
+      }
+      node.left = buildTree_(inorder,left,si,idx-1);
+      node.right = buildTree_(inorder,right,idx+1,ei);
+      return node;
+  }
