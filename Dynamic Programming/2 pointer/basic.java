@@ -574,12 +574,13 @@ public static void maxGold_backEngg(int[][] dp, int sr,int sc,String s)
                 idx = i;
                 maxgold = dp[x][y];
             }
-            if(idx != -1)
+        }
+        if(idx != -1)
             {
                 int r = sr + dirs[i][0], c = sc + dirs[i][1];
                 maxGold_backEngg(dp,r,c,s+"("+sr+" "+sc+")->");
             }
-        }
+        
     }
 
 // Maximum Path sum in a Matrix
@@ -1013,6 +1014,272 @@ public String longestPalindrome(String s) {
         return minCut_(s,dp,0,n-1,pdp);
     }
 
-// 
+// count subsequence of aibjck 
 
+int fun(string &s) {
+        long acount = 0;
+        long bcount = 0;
+        long ccount = 0;
+        long empty = 1;
+        long mod = 1e9 + 7;
+        for(int i=0;i<s.size();i++)
+        {
+            if(s[i] == 'a')
+            {
+                acount = (acount + acount + empty)%mod;
+            }
+            else if(s[i] == 'b')
+            {
+                bcount = (bcount + (acount + bcount))%mod;
+            }
+            else if(s[i] == 'c')
+            {
+                ccount = (ccount + (bcount + ccount))%mod;
+            }
+        }
+        return (int)ccount%mod;
+    }
+
+// count subsequence of aibjckdlem
+
+// Leetcode 140
+
+class Solution {
+    public void wordBreak_(String s,boolean[] dp,int si,int ei,ArrayList<String>ans,String str,
+                          HashSet<String>set, int mxlen)
+    {
+        if(si >= ei)
+        {  
+            ans.add(str.substring(0,str.length()-1));
+            return;
+        }
+        for(int i=1;i<=mxlen && i+si<=ei ;i++)
+        {
+            if(dp[i+si]==true)
+            {
+                String sub = s.substring(si,si+i);
+                if(set.contains(sub)){
+                     wordBreak_(s,dp,si+i,ei,ans,str+sub+" ",set,mxlen);
+                }
+            }
+               
+        }
+    }
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        HashSet<String> set = new HashSet<>();
+        int maxlen = 0;
+        for(String str : wordDict)
+        {
+            set.add(str);
+            maxlen = Math.max(maxlen,str.length());
+        }
+        boolean[] dp = new boolean[s.length()+1];
+        dp[0] = true;
+        int n = s.length();
+        for(int i=0;i<=n;i++)
+        {
+            if(dp[i] == false)
+                continue;
+            for(int j=1;j<=maxlen && i+j<=n; j++)
+            {
+                String str = s.substring(i,i+j);
+                if(set.contains(str))
+                    dp[i+j] = true;
+            }
+        }
+        ArrayList<String> ans = new ArrayList<>();
+        if(dp[n]==false)
+            return ans;
+        wordBreak_(s,dp,0,n,ans,"",set,maxlen);
+        return ans;
+    }
+}
+
+// LIS
+
+class Solution {
+    public int lengthOfLIS_(int[] nums,int[] dp,int ei)
+    {
+        
+        if(dp[ei] != -1)
+            return dp[ei];
+        int mx = 1;
+        for(int i = ei+1;i<dp.length;i++)
+        {
+            if(nums[i] < nums[ei]){
+               mx = Math.max(mx,lengthOfLIS_(nums,dp,i)+1); 
+            }
+        }
+        return dp[ei] = mx;
+        
+    }
+    public int lengthOfLIS(int[] nums) {
+        int ans = 0;
+        int[] dp = new int[nums.length+1];
+        Arrays.fill(dp,-1);
+        for(int i=0;i<nums.length;i++)
+        {
+            ans = Math.max(ans,lengthOfLIS_(nums,dp,i));
+        }
+        return ans;
+    }
+}
+
+// LIS R-L
+class Solution {
+    public int lengthOfLIS_(int[] nums,int[] dp,int ei)
+    {
+        
+        if(dp[ei] != -1)
+            return dp[ei];
+        int mx = 1;
+        for(int i = ei+1;i<dp.length;i++)
+        {
+            if(nums[i] < nums[ei]){
+               mx = Math.max(mx,lengthOfLIS_(nums,dp,i)+1); 
+            }
+        }
+        return dp[ei] = mx;
+        
+    }
+    public int lengthOfLIS(int[] nums) {
+        int ans = 0;
+        int[] dp = new int[nums.length+1];
+        Arrays.fill(dp,-1);
+        for(int i=0;i<nums.length;i++)
+        {
+            ans = Math.max(ans,lengthOfLIS_(nums,dp,i));
+        }
+        return ans;
+    }
+}
+
+// longest Bitonic subsequence
+class Solution
+{
+    public void lis(int[] nums,int[] dp)
+    {
+        int n = nums.length;
+        for(int i=0;i<n;i++)
+        {
+            dp[i] = 1;
+            for(int j = i-1;j>=0;j--)
+            {
+                if(nums[i] > nums[j])
+                dp[i] = Math.max(dp[i],dp[j]+1);
+            }
+        }
+    }
+    public void lis_RL(int[] nums,int[] dp)
+    {
+         int n = nums.length;
+         for(int i= nums.length-1;i>=0;i--)
+         {
+             dp[i] = 1;
+             for(int j = i+1;j<nums.length;j++)
+             {
+                 if(nums[j] < nums[i])
+                 dp[i] = Math.max(dp[i],dp[j] + 1);
+             }
+         }
+        
+    }
+    public int LongestBitonicSequence(int[] nums)
+    {
+        // Code here
+        int n = nums.length;
+        int[] dp1 = new int[n];
+        int[] dp2 = new int[n];
+        Arrays.fill(dp1,-1);
+        Arrays.fill(dp2,-1);
+        
+        lis(nums,dp1);
+        lis_RL(nums,dp2);
+        int ans = 0;
+        for(int i=0;i<n;i++)
+        {
+            //System.out.println(dp1[i]+" "+dp2[i]);
+            ans = Math.max(ans,dp1[i]+dp2[i]-1);
+        }
+        return ans;
+    }
+}
+
+// Maximum Sum Bitonic Subsequence
+class Solution
+{
+    public void lis(int[] nums,int[] dp)
+    {
+        int n = nums.length;
+        for(int i=0;i<n;i++)
+        {
+            dp[i] = 1;
+            for(int j = i-1;j>=0;j--)
+            {
+                if(nums[i] > nums[j])
+                dp[i] = Math.max(dp[i],dp[j]+1);
+            }
+        }
+    }
+    public void lis_RL(int[] nums,int[] dp)
+    {
+         int n = nums.length;
+         for(int i= nums.length-1;i>=0;i--)
+         {
+             dp[i] = 1;
+             for(int j = i+1;j<nums.length;j++)
+             {
+                 if(nums[j] < nums[i])
+                 dp[i] = Math.max(dp[i],dp[j] + 1);
+             }
+         }
+        
+    }
+    public int LongestBitonicSequence(int[] nums)
+    {
+        // Code here
+        int n = nums.length;
+        int[] dp1 = new int[n];
+        int[] dp2 = new int[n];
+        Arrays.fill(dp1,-1);
+        Arrays.fill(dp2,-1);
+        
+        lis(nums,dp1);
+        lis_RL(nums,dp2);
+        int ans = 0;
+        for(int i=0;i<n;i++)
+        {
+            //System.out.println(dp1[i]+" "+dp2[i]);
+            ans = Math.max(ans,dp1[i]+dp2[i]-1);
+        }
+        return ans;
+    }
+}
+
+//Maximum Sum Increasing Bitonic Subsequence
+
+class Solution
+{
+	public int maxSumIS(int nums[], int n)  
+	{  
+	    //code here.
+	    int max = 0;
+	    int[] dp = new int[n];
+	    for(int i=0;i<n;i++)
+	    {
+	        dp[i] = nums[i];
+	        for(int j = i-1;j>=0;j--)
+	        {
+	            if(nums[j] < nums[i])
+	            {
+	                dp[i] = Math.max(dp[i], dp[j] + nums[i]);
+	            }
+	        }
+	        max = Math.max(max,dp[i]);
+	    }
+	    return max;
+	}  
+}
+
+//
 

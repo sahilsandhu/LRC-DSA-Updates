@@ -683,3 +683,99 @@ class Solution {
       node.right = buildTree_(inorder,right,idx+1,ei);
       return node;
   }
+
+// construct BST from inorder
+
+public static int idx = 0;
+    public static TreeNode constructFromInOrder_(int[] inorder,int si,int ei)
+    {
+        if(si >= ei)
+        {
+            return si==ei?new TreeNode(inorder[si]) : null;
+        }
+        int mid = (si + ei)/2;
+        TreeNode node = new TreeNode(inorder[mid]);
+        node.left = constructFromInOrder_(inorder,si,mid-1);
+        node.right = constructFromInOrder_(inorder,mid+1,ei);
+        return node;
+        
+    }
+    public static TreeNode constructFromInOrder(int[] inorder) {
+        idx = 0;
+        return constructFromInOrder_(inorder,0,inorder.length-1);
+    }
+// construct bst from postorder
+class GFG
+{
+    public static int idx;
+    public static Node bstFromPostorder_(int[] postorder,int min,int max)
+    {
+        if(idx < 0 || postorder[idx] < min  || postorder[idx] > max)
+        return null;
+        Node node = new Node(postorder[idx--]);
+        node.right = bstFromPostorder_(postorder,node.data,max);
+        node.left = bstFromPostorder_(postorder,min,node.data);
+        return node;
+    }
+    public static Node constructTree(int[] postorder,int n) {
+        idx = postorder.length-1;
+        return bstFromPostorder_(postorder,Integer.MIN_VALUE, Integer.MAX_VALUE);
+        
+    }
+    
+}
+
+// Construct BT from levelorder traversal
+
+ public static class pair{
+        TreeNode node;
+        int min;
+        int max;
+        pair(TreeNode node,int min,int max)
+        {
+            this.node = node;
+            this.min = min;
+            this.max = max;
+        }
+    } 
+    public static TreeNode constructBSTFromLevelOrder_(int[] levelorder)
+    {
+        Queue<pair> q = new ArrayDeque<>();
+        q.add(new pair(null,Integer.MIN_VALUE,Integer.MAX_VALUE));
+        int idx = 0;
+        TreeNode root = null;
+        while(q.size()>0 && idx < levelorder.length)
+        {
+            pair rp = q.remove();
+            if (levelorder[idx] < rp.min || levelorder[idx] > rp.max)continue;
+            
+            TreeNode node = new TreeNode(levelorder[idx++]);
+            if(rp.node == null)
+            {
+               root = node; 
+            }
+            else
+            {
+                //TreeNode node = new TreeNode(levelorder[idx++]);
+                if(rp.node.val < node.val)
+                {
+                    rp.node.right = node;
+                }
+                else
+                {
+                    rp.node.left = node;
+                }
+            }
+            q.add(new pair(node,rp.min,node.val));
+            q.add(new pair(node,node.val,rp.max));
+        }
+        return root;
+        
+    }
+    public static TreeNode constructBSTFromLevelOrder(int[] LevelOrder) {
+        return constructBSTFromLevelOrder_(LevelOrder);
+    }
+
+
+//
+
