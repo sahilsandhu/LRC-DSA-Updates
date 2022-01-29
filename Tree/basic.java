@@ -777,5 +777,187 @@ class GFG
     }
 
 
-//
+// width of a Binary Tree
+public static void solve(TreeNode root,int level,int[] wid)
+    {
+        if(root == null)
+        return;
+        solve(root.left,level-1,wid);
+        solve(root.right,level+1,wid);
+        wid[0] = Math.min(wid[0],level);
+        wid[1] = Math.max(wid[1],level);
+        //return wid[0]-wid[1]+1;
+        
+    }
+    public static int width(TreeNode root) {
+       int[] wid= new int[2];
+       solve(root,0,wid);
+       return wid[1]-wid[0]+1;
+    }
+    
+//  vertical level order Traversal Sum
+
+public static void findWid(TreeNode root,int level,int[] wid)
+    {
+        if(root == null)
+        return;
+        findWid(root.left,level-1,wid);
+        findWid(root.right,level+1,wid);
+        wid[0] = Math.min(wid[0],level);
+        wid[1] = Math.max(wid[1],level);
+    }
+    public static void verticalOrderTraversal_(TreeNode root, int level, HashMap<Integer,Integer> hmap)
+    {
+        if(root == null)
+        return;
+        if(!hmap.containsKey(level))
+        {
+         hmap.put(level,0);   
+        }
+        int val = hmap.get(level) + root.val;
+        hmap.put(level,val);
+        verticalOrderTraversal_(root.left,level-1,hmap);
+        verticalOrderTraversal_(root.right,level+1,hmap);
+    }
+
+    public static ArrayList<Integer> verticalOrderSum(TreeNode root) {
+        int[] wid = new int[2];
+        findWid(root,0,wid);
+        int width = wid[1]-wid[0]+1;
+        ArrayList<Integer> ans = new ArrayList<>();
+        HashMap<Integer, Integer> hmap = new HashMap<>();
+      verticalOrderTraversal_(root,0,hmap);  
+      int si = wid[0], ei = wid[1];
+      while(si<=ei)
+      {
+          ans.add(hmap.get(si++));
+      }
+      return ans;
+    }
+
+// level order traversal
+public List<List<Integer>> levelOrder(TreeNode root) {
+     Queue<TreeNode> q = new ArrayDeque<>();
+        List<List<Integer>> ans = new ArrayList<>();
+        if(root == null)
+            return ans;
+        q.add(root);
+        while(q.size() > 0)
+        {
+            int s = q.size();
+            List<Integer> ar = new ArrayList<>();
+            while(s-- > 0)
+            {
+                TreeNode rn = q.remove();
+                ar.add(rn.val);
+                if(rn.left != null)
+                    q.add(rn.left);
+                if(rn.right != null)
+                    q.add(rn.right);
+            }
+            ans.add(ar);
+        }
+        return ans;
+    }
+
+// Left View 
+
+ArrayList<Integer> leftView(Node root)
+    {
+     Queue<Node> q = new ArrayDeque<>();
+        ArrayList<Integer> ans = new ArrayList<>();
+        if(root == null)
+            return ans;
+        q.add(root);
+        while(q.size() > 0)
+        {
+            int s = q.size();
+            ArrayList<Integer> ar = new ArrayList<>();
+            while(s-- > 0)
+            {
+                Node rn = q.remove();
+                ar.add(rn.data);
+                if(rn.left != null)
+                    q.add(rn.left);
+                if(rn.right != null)
+                    q.add(rn.right);
+            }
+            ans.add(ar.get(0));
+        }
+        return ans;
+    }
+
+// Right View 
+ArrayList<Integer> rightView(Node root) {
+        Queue<Node> q = new ArrayDeque<>();
+        ArrayList<Integer> ans = new ArrayList<>();
+        if(root == null)
+            return ans;
+        q.add(root);
+        while(q.size() > 0)
+        {
+            int s = q.size();
+            ArrayList<Integer> ar = new ArrayList<>();
+            while(s-- > 0)
+            {
+                Node rn = q.remove();
+                ar.add(rn.data);
+                if(rn.left != null)
+                    q.add(rn.left);
+                if(rn.right != null)
+                    q.add(rn.right);
+            }
+            ans.add(ar.get(ar.size()-1));
+        }
+        return ans;
+    }
+
+// Vertical order Traversal
+
+ public static class pair{
+        TreeNode node;
+        int level;
+        pair(TreeNode node, int level)
+        {
+            this.node = node;
+            this.level = level;
+        }
+    }
+    public static ArrayList<ArrayList<Integer>> verticalOrderTraversal(TreeNode root) {
+      Queue<pair> q = new LinkedList<>();
+      q.add(new pair(root,0));
+      HashMap<Integer,ArrayList<Integer>> hmap = new HashMap<>();
+      int minhl = 0;
+      int maxhl = 0;
+      while(q.size() > 0)
+      {
+        int sz = q.size();
+        while(sz-- > 0)
+        {
+            pair rp = q.remove();
+            hmap.putIfAbsent(rp.level,new ArrayList<>());
+            hmap.get(rp.level).add(rp.node.val);
+            minhl = Math.min(rp.level, minhl);
+            maxhl = Math.max(rp.level, maxhl);
+            if(rp.node.left != null)
+            {
+               q.add(new pair(rp.node.left,rp.level-1)); 
+            }
+            if(rp.node.right != null)
+            {
+                q.add(new pair(rp.node.right,rp.level+1));
+            }
+        }
+      }
+      
+      ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+      while(minhl<=maxhl)
+      {
+        ans.add(hmap.get(minhl++));
+      }
+      return ans;
+
+    }
+
+
 
