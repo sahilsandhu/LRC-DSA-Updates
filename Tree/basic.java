@@ -959,5 +959,108 @@ ArrayList<Integer> rightView(Node root) {
 
     }
 
+    // Diagonal Traversal 1
+
+        public static ArrayList<ArrayList<Integer>> diagonalOrder(TreeNode root) {
+       ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+       Queue<TreeNode> q = new ArrayDeque<>();
+       
+       q.add(root);
+       int idx = 0;
+       while(q.size() > 0)
+       {
+        int sz = q.size();
+        ArrayList<Integer> tmp = new ArrayList<>();
+
+           while(sz-- > 0)
+           {
+               TreeNode rn = q.remove();
+               while(rn!=null)
+               {
+                   if(rn.left != null)
+                   {
+                       q.add(rn.left);
+                   }
+                   tmp.add(rn.val);
+                   rn = rn.right;
+               }
+               
+           }
+           ans.add(tmp);
+       }
+       return ans;
+    }
+
+// Diagonal Traversal 2
+public static ArrayList<ArrayList<Integer>> diagonalOrder(TreeNode root) {
+    ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+    Queue<TreeNode> q = new ArrayDeque<>();
+       
+    q.add(root);
+    int idx = 0;
+    while(q.size() > 0)
+       {
+        int sz = q.size();
+        ArrayList<Integer> tmp = new ArrayList<>();
+
+           while(sz-- > 0)
+           {
+               TreeNode rn = q.remove();
+               while(rn!=null)
+               {
+                   tmp.add(rn.val);
+                   if(rn.right != null)
+                   {
+                       q.add(rn.right);
+                   }
+                   rn = rn.left;
+               }
+               
+           }
+           ans.add(tmp);
+       }
+       return ans;
+    }
+
+// Diagonal order sum of BT
+// Same
+
+// all single child parent in BT
+
+public static void exactlyOneChild_(TreeNode root,ArrayList<Integer> ans)
+  {
+    if(root == null || (root.left==null && root.right==null))
+    return;
+    if((root.left==null && root.right!=null) || (root.right==null && root.left != null))
+    {
+        ans.add(root.val);
+    }
+    exactlyOneChild_(root.left,ans);
+    exactlyOneChild_(root.right,ans);
+    
+    return;
+  }
+
+//// count all single child parent in BT
+
+
+public static TreeNode createTree(int[] arr, int[] IDX) {
+    if (IDX[0] > arr.length || arr[IDX[0]] == -1) {
+      IDX[0]++;
+      return null;
+    }
+    TreeNode Treenode = new TreeNode(arr[IDX[0]++]);
+    Treenode.left = createTree(arr, IDX);
+    Treenode.right = createTree(arr, IDX);
+
+    return Treenode;
+  }
+
+//burninig tree
+
+
+// burning tree 2
+
+
 
 
