@@ -686,7 +686,7 @@ public static long helper(int N,int K,long[][]dp)
         
     }
 
-// LIS tabulation
+// LCS tabulation
  public int lCS_(String s1,int I,String s2,int J,int[][]dp)
     {
         for(int idx1=0;idx1<=I ;idx1++)
