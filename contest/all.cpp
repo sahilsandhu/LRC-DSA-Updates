@@ -206,29 +206,23 @@ int main()
 {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
-    int n;
-    
-    while(n--)
+    int t;
+    cin>>t;
+    while(t--)
     {
-        int n;
-        cin>>n;
-        vector<vector<int>> v(3,vector<int>(3));
-        for(int i=0;i<3;i++)
+        int x,y;
+        cin>>x>>y;
+        if(y*2 == x)
         {
-            for(int j=0;j<3;j++)
-            {
-                cin>>v[i][j];
-            }
+            cout<<x;
         }
-
-        int sum1 = v[0][1] + v[0][2] + v[1][2];
-        int sum2 = v[1][0] + v[2][0] + v[2][1];
-        if(v[0][0] == v[1][1] == v[2][2] == n)
-        cout<<"0";
+        else if(y*2 > x)
+        {
+            cout<<x/2;
+        }
         else{
-            cout<<max(sum1,sum2)<<endl;
+            cout<<y;
         }
-
     }
     return 0;
 }
