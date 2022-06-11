@@ -84,4 +84,31 @@ public static void main(String[] args) {
 	    }
 	}
 
+// Largest Subarray With Contiguous Elements
+
+public static int solution(int[] arr) {
+		int n = arr.length;
+		int ans = 0;
+		for(int i=0;i<n-1;i++){
+		    int min = arr[i];
+		    int max = arr[i];
+		    HashSet<Integer> hs = new HashSet<>();
+		    hs.add(arr[i]);
+		    for(int j=i+1;j<n;j++){
+		        if(hs.contains(arr[j]))
+		        break;
+		        else
+		        hs.add(arr[j]);
+		        min = Math.min(min,arr[j]);
+		        max = Math.max(max,arr[j]);
+		        if(max-min == j-i){
+		            int len = j-i+1;;
+		            ans = Math.max(len, ans);
+		        }
+		    }
+		}
+
+		return ans;
+	}
+
 // 
