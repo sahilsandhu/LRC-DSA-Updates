@@ -111,4 +111,42 @@ public static int solution(int[] arr) {
 		return ans;
 	}
 
-// 
+// Count Of Substrings Having All Unique Characters
+
+	public static int solution(String str) {
+		int ans = 0, n = str.length();
+		int i = -1, j = -1;
+		HashMap<Character, Integer> hm = new HashMap<>();
+		while(true){
+		    boolean f1 = false, f2 = false;
+		    while(i < n-1){
+		        f1 = true;
+		        i++;
+		        char ch = str.charAt(i);
+		        hm.put(ch, hm.getOrDefault(ch,0) + 1);
+		        if(hm.get(ch)==2){
+		            break;
+		        }
+		        else{
+		            int len = i-j;
+		            ans += len;
+		        }
+		    }
+		    while(j < i){
+		        f2 = true;
+		        j++;
+		        char ch = str.charAt(j);
+		        hm.put(ch, hm.get(ch)-1);
+		        if(hm.get(ch) == 1)
+		        {
+		            ans += (i-j);
+		            break;
+		        }
+		    }
+		    if(f1 == false && f2 == false){
+		        break;
+		    }
+		}
+		return ans;
+	}
+
