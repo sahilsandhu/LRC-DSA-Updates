@@ -150,3 +150,154 @@ public static int solution(int[] arr) {
 		return ans;
 	}
 
+// Maximum Consecutive Ones - 2
+// 1. You are given an array(arr) which contains only 0's and 1's and a number K.
+// 2. You have to find the maximum number of consecutive 1's in the given array 
+// if you can flip at most K zeroes.
+
+ public static int solution(int[] arr, int k){
+        int count = 0, j = -1, ans = 0;
+        for(int i=0;i<arr.length; i++){
+            if(arr[i] == 0)
+            count++;
+            while(count > 1){
+                j++;
+                if(arr[j] == 0)
+                count--;
+            }
+            int len = j-i;
+            if(len > ans)
+            ans = len;
+        }
+        return ans;
+    }
+
+// Longest Substring With At Most K Unique Characters
+
+public static int solution(String str, int k) {
+		// write your code here
+		int ans = 0;
+		int i = -1, j = -1, n = str.length();
+		HashMap<Character,Integer> hm = new HashMap<>();
+		while(true){
+		    boolean f1 = false, f2 = false;
+		    while(i < n-1){
+		        f1 = true;
+		        i++;
+		        char ch = str.charAt(i);
+		        hm.put(ch, hm.getOrDefault(ch,0)+1);
+		        if(hm.size() <= k){
+		            int len = i-j;
+		            if(len > ans)
+		            ans = len;
+		        }
+		        else{
+		            break;
+		        }
+		    }
+		    while(j < i){
+		        f2 = true;
+		        j++;
+		        char ch = str.charAt(j);
+		        if(hm.get(ch) == 1)
+		        {
+		            hm.remove(ch);
+		        }
+		        else{
+		            hm.put(ch, hm.get(ch)-1);
+		        }
+		        if(hm.size() > k)
+		        continue;
+		        else
+		        break;
+		    }
+		    if(f1 == false && f2 == false)
+		    break;
+		}
+		
+		return ans;
+	}
+	
+
+// Count Of Substrings Having At Most K Unique Characters
+
+	public static int solution(String str, int k) {
+		int ans = 0;
+		int i = -1, j = -1;
+		HashMap<Character,Integer> hm = new HashMap<>();
+		while(true){
+		    boolean f1 = false, f2 = false;
+		    while(i < str.length()-1){
+		        f1 = true;
+		        i++;
+		        char ch = str.charAt(i);
+		        hm.put(ch, hm.getOrDefault(ch,0)+1);
+		        if(hm.size() <= k){
+		            ans += (i-j);
+		        }
+		        else{
+		            break;
+		        }
+		    }
+		    
+		    while(j < i){
+		        f2 = true;
+		        j++;
+		        char ch = str.charAt(j);
+		        if(hm.get(ch) == 1)
+		        hm.remove(ch);
+		        else
+		        hm.put(ch, hm.get(ch)-1);
+		        
+		        if(hm.size() > k)
+		        continue;
+		        else{
+		        ans+=(i-j);
+		        break;
+		        }
+		    }
+		    if(f1 == false && f2 == false)
+		    break;
+		}
+		return ans;
+	}
+	
+
+// Find Anagram Mappings
+
+public static class pair{
+        int idx;
+        ArrayList<Integer> al = new ArrayList<>();
+        pair(int idx, ArrayList<Integer> al){
+            this.idx = idx;
+            this.al = al;
+        }
+    }
+	public static int[] anagramMappings(int[] arr1, int[] arr2) {
+		HashMap<Integer, pair> hm = new HashMap<>();
+		for(int i=0;i<arr2.length;i++){
+		    int val = arr2[i];
+		    if(hm.containsKey(val) == true){
+		        pair rp = hm.get(val);
+		        rp.al.add(i);
+		        hm.put(val,rp);
+		    }
+		    else{
+		        ArrayList<Integer> temp = new ArrayList<>();
+		        temp.add(i);
+		        pair tp = new pair(0,temp);
+		        hm.put(val,tp);
+		    }
+		}
+		
+		int[] ans = new int[arr1.length];
+		int idx = 0;
+		for(int i=0;i<arr1.length;i++){
+		    int val = arr1[i];
+		    pair rp = hm.get(val);
+		    ans[idx++] = rp.al.get(rp.idx);
+		    rp.idx++;
+		    hm.put(val, rp);
+		}
+		return ans;
+	}
