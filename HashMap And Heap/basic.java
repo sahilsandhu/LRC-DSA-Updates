@@ -301,3 +301,40 @@ public static class pair{
 		}
 		return ans;
 	}
+
+// Powerful Number
+
+	public static ArrayList<Integer> powerfulIntegers(int x, int y, int bound) {
+		HashSet<Integer> hs = new HashSet<>();
+		for(int i=1; i<bound; i*=x){
+		    for(int j=1; i+j <= bound; j*=y){
+		        hs.add(i+j);
+		        if(y == 1)
+		        break;
+		    }
+		    if(x == 1)
+		    break;
+		}
+		return new ArrayList<>(hs);
+	}
+
+// Pairs With Given Sum In Two Sorted Matrices
+
+public static int solve(int[][] num1, int[][] num2, int k) {
+		// write your code here
+		int ans = 0;
+		HashMap<Integer, Integer> hs = new HashMap<>();
+		for(int i=0; i<num1.length; i++){
+		    for(int j=0; j<num1[0].length; j++){
+		        hs.put(num1[i][j], hs.getOrDefault(num1[i][j], 0) + 1);
+		    }
+		}
+		
+		for(int i=0;i<num2.length;i++){
+		    for(int j=0;j<num2[0].length; j++){
+		        if(hs.containsKey(k - num2[i][j]))
+		        ans+= hs.get(k - num2[i][j]);
+		    }
+		}
+		return ans;
+	}
