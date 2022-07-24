@@ -863,7 +863,7 @@ int isMatch_(String s1,String s2,int l1,int l2,int[][]dp)
         if(s1.charAt(l1-1) == s2.charAt(l2-1) || s2.charAt(l2-1) == '?')
             return dp[l1][l2] = isMatch_(s1,s2,l1-1,l2-1,dp);
         
-        else if(s2.charAt(l2-1) == '*')
+        else if(s2.charAt(l2-1) == '*')i
         {
             boolean res = false;
             res = res || (isMatch_(s1,s2,l1-1,l2,dp) == 1); // * string
@@ -900,6 +900,42 @@ int isMatch_(String s1,String s2,int l1,int l2,int[][]dp)
         System.out.println(str);
         return isMatch_(s,str,l1,l2,dp)==1;
     }
+
+// Leetcode 1458
+
+class Solution {
+    public int Maximum(int...ar){
+        int max = ar[0];
+        for(int val : ar){
+            max = Math.max(val,max);
+        }
+        return max;
+    }
+    public int maxDotProduct_(int[] nums1, int[] nums2, int i, int j, int[][] dp){
+        if(i == 0 || j == 0){
+            return dp[i][j] = -(int)1e8;
+        }
+        if(dp[i][j] != -(int)1e9){
+            return dp[i][j];
+        }
+        int curr = nums1[i-1]*nums2[j-1];
+        int inc = maxDotProduct_(nums1,nums2,i-1,j-1, dp)+curr;
+        int left = maxDotProduct_(nums1,nums2,i-1,j,dp);
+        int right = maxDotProduct_(nums1, nums2,i, j-1, dp);
+        int ans = Maximum(curr,inc,left,right);
+        return dp[i][j] = ans;
+    }
+    public int maxDotProduct(int[] nums1, int[] nums2) {
+        int n = nums1.length;
+        int m = nums2.length;
+        int[][] dp = new int[n+1][m+1];
+        for(int[] ar : dp){
+            Arrays.fill(ar, -(int)1e9);
+        }
+        return maxDotProduct_(nums1,nums2,n,m,dp);
+    }
+}
+
 
 // Leetcode 1035
 
